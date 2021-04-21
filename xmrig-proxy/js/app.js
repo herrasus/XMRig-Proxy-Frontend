@@ -118,9 +118,9 @@ $$(document).on('page:init', '.page[data-name="ch_pool"]', function (e) {
 	$$('.title_proxy').html("Proxy <b>" + config_data.proxy_infos[proxy_id].label +"</b>" );
 	get_job();	
 	$.each( config_data.pools, function( i, item ){
-		$('select[name=pool]').append($("<option></option>").attr("value",i).text(item.url));
+		$('select[name=pool]').append($("<option></option>").attr("value",i).text((item.user.search(':') != -1 ? item.user.split(':')[0] : 'Nicehash')+':'+item.url));
 		$$('#percent_pool').append(
-		'<div class="item-input-wrap">'+
+		'<div class="item-input-wrap">'+(item.user.search(':') != -1 ? item.user.split(':')[0] : 'Nicehash')+':'+
 			item.url+'<input class="percent_input" name="'+item.url+'" type="number" placeholder="Enter percentage" validate pattern="[0-9]*" data-error-message="Only numbers please!">'+
 		'</div>');
 	});
@@ -165,7 +165,7 @@ $$(document).on('page:init', '.page[data-name="ch_pool"]', function (e) {
 				app.request.post('php/get_json.php', {cc:"put_data",  mode:'switch', proxy:proxy_id, proxy_config_data:config_data, summary_array:proxy_data, new_pool:selected_pool}, function (data) {
 					if(data){
 						app.dialog.close();
-						$("#act_pool").html( config_data.pools[index].url );
+						$("#act_pool").html( (config_data.pools[index].user.search(':') != -1 ? config_data.pools[index].user.split(':')[0] : 'Nicehash')+':'+config_data.pools[index].url );
 						app.notification.create({text: 'Pool changed successfully'}).open();
 						get_data();
 						//setTimeout(function(){ get_job(); }, 5000);	ne fonctionne pas	
@@ -243,7 +243,7 @@ $$(document).on('page:init', '.page[data-name="history"]', function (e) {
 					var item_hashes = item.hashes;
 					if(item_hashes < 0)item_hashes = 0;
 					history_html+='<tr>'+
-						'<td>'+ (item.pool != null ? item.pool.split(':')[0] : "??") +'</td>'+
+						'<td>'+ (item.pool != null ? item.pool.split(':')[1] : "??") +'</td>'+
 						'<td>'+ new Date(item.start * 1000).getDate()+ " " +time(item.start) + '</td>'+
 						'<td>'+ secondstotime(item.time_on, true) +'</td>'+
 						'<td>'+ (item_hashes > 0 ? getReadableHashRateString(item_hashes) : "----") +'</td>'+
@@ -457,7 +457,7 @@ function get_data(){
 		$.each(data.config_data.proxy_infos, function( i, item ){
 			proxy_list+='<option value="'+i+'" ' + (i == proxy_id ? "selected" : "") + '>'+item.label+'</option>';
 		});
-		$$("#act_pool").html( config_data.pools[0].url );
+		$$("#act_pool").html( (config_data.pools[0].user.search(':') != -1 ? config_data.pools[0].user.split(':')[0] : 'Nicehash')+':'+config_data.pools[0].url );
 		$$('#change_proxy').html(proxy_list);
 		$$("#bar_infos").html( " - " + getReadableHashRateString( (data.results.hashes_total / data.uptime))+"/s Wrk. "+data.miners.now );
 		$$("#worker_id").html( data.worker_id );
