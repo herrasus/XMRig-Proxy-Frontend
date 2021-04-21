@@ -47,6 +47,7 @@ The app_password is the password asked when you open webapp.
 
 ## Usage
 For pool change , add all your pools to the xmrig-proxy config.json and select one from within the webapp.
+-This is not working currently. Proxys config.json gets 0 for the port setting in http part of config.json. Problem seems to be in xmrig-proxy and how it writes out the config.json as the json passed to proxy has the port in it correctly.
 
 Percentage change :
 
